@@ -34,13 +34,15 @@ public class MusicControlsNotification {
 	private Notification.Builder notificationBuilder;
 	private int notificationID;
 	protected MusicControlsInfos infos;
+	private MediaSessionCompat mediaSessionCompat;
 	private Bitmap bitmapCover;
 	private String CHANNEL_ID;
 
 	// Public Constructor
-	public MusicControlsNotification(Activity cordovaActivity, int id){
+	public MusicControlsNotification(Activity cordovaActivity, int id, MediaSessionCompat sessionCompat){
 		this.CHANNEL_ID = UUID.randomUUID().toString();
 		this.notificationID = id;
+		this.mediaSessionCompat = sessionCompat;
 		this.cordovaActivity = cordovaActivity;
 		Context context = cordovaActivity;
 		this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -264,7 +266,10 @@ public class MusicControlsNotification {
 			for (int i = 0; i < nbControls; ++i) {
 				args[i] = i;
 			}
-			builder.setStyle(new Notification.MediaStyle().setShowActionsInCompactView(args));
+
+			var mediaStyle = new Notification.MediaStyle().setShowActionsInCompactView(args).setMediaSession(this.MediaSessionCompat.sessionToken);
+
+			builder.setStyle(mediaStyle);
 		}
 		this.notificationBuilder = builder;
 	}
